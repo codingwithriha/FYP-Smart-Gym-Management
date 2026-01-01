@@ -3,6 +3,7 @@ from admin.manage_users import load_manage_users
 from admin.manage_members import load_manage_members
 from admin.manage_trainers import load_manage_trainers
 from admin.manage_attendant import load_manage_attendants
+from admin.manage_managers import load_manage_managers
 
 
 
@@ -85,7 +86,11 @@ def open_admin_dashboard():
     "Manage Attendants",
     lambda: load_manage_attendants(content)
 ).pack(fill="x")
-    main_btn("Manage Managers").pack(fill="x")
+    main_btn(
+    "Manage Managers",
+    lambda: load_manage_managers(content)
+).pack(fill="x")
+    
     main_btn(
     "Manage Users",
     lambda: load_manage_users(content)
