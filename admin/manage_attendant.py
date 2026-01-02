@@ -56,16 +56,16 @@ def load_manage_attendants(content):
     search_entry = tk.Entry(filter_frame, width=30)
     search_entry.pack(side="left", padx=(0, 10))
 
-    tk.Button(
-        filter_frame,
-        text="Search",
-        bg="#4CAF50",
-        fg="white",
-        bd=0,
-        padx=20,
-        pady=6,
-        command=lambda: load_attendants_table()
-    ).pack(side="left")
+    # tk.Button(
+    #     filter_frame,
+    #     text="Search",
+    #     bg="#4CAF50",
+    #     fg="white",
+    #     bd=0,
+    #     padx=20,
+    #     pady=6,
+    #     command=lambda: load_attendants_table()
+    # ).pack(side="left")
 
     # 🔹 Live search & filter
     search_entry.bind("<KeyRelease>", lambda e: load_attendants_table())

@@ -43,16 +43,16 @@ def load_manage_trainers(content):
     search_entry = tk.Entry(filter_frame, width=30)
     search_entry.pack(side="left", padx=10)
 
-    tk.Button(
-        filter_frame,
-        text="Search",
-        bg="#4CAF50",
-        fg="white",
-        bd=0,
-        padx=20,
-        pady=6,
-        command=lambda: load_trainers_table()
-    ).pack(side="left")
+    # tk.Button(
+    #     filter_frame,
+    #     text="Search",
+    #     bg="#4CAF50",
+    #     fg="white",
+    #     bd=0,
+    #     padx=20,
+    #     pady=6,
+    #     command=lambda: load_trainers_table()
+    # ).pack(side="left")
 
     # ================= FORM =================
     form_frame = tk.Frame(content, bg="#252540")
