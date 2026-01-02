@@ -10,6 +10,7 @@ from admin.manage_attendance import load_manage_attendance
 from admin.manage_appointments import load_manage_appointments
 from admin.subscriptions import load_manage_subscriptions
 from admin.reports import load_manage_reports
+from admin.salaries import load_manage_salaries
 
 
 
@@ -129,8 +130,11 @@ def open_admin_dashboard():
     "Reports",
     lambda: load_manage_reports(content)
 ).pack(fill="x")
-    main_btn("Reports").pack(fill="x")
-    main_btn("Salaries").pack(fill="x")
+    main_btn(
+    "Salaries",
+    lambda: load_manage_salaries(content)
+).pack(fill="x")
+    
     main_btn("Payments").pack(fill="x")
     main_btn("Manage Announcements").pack(fill="x")
     main_btn("Trainer Schedules").pack(fill="x")
