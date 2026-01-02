@@ -29,6 +29,15 @@ def load_manage_workout_zones(content):
     filter_frame = tk.Frame(content, bg="#1e1e2f")
     filter_frame.pack(fill="x", padx=30, pady=10)
 
+    # 🔹 Filter Label + Combobox
+    tk.Label(
+        filter_frame,
+        text="Filter by Floor:",
+        bg="#1e1e2f",
+        fg="white",
+        font=("Arial", 12, "bold")
+    ).pack(side="left", padx=(0, 5))
+
     floor_filter = ttk.Combobox(
         filter_frame,
         values=[
@@ -43,7 +52,16 @@ def load_manage_workout_zones(content):
         width=20
     )
     floor_filter.set("All")
-    floor_filter.pack(side="left", padx=(0, 10))
+    floor_filter.pack(side="left", padx=(0, 15))
+
+    # 🔹 Search Label + Entry
+    tk.Label(
+        filter_frame,
+        text="Search by Zone Name:",
+        bg="#1e1e2f",
+        fg="white",
+        font=("Arial", 12, "bold")
+    ).pack(side="left", padx=(0, 5))
 
     search_entry = tk.Entry(filter_frame, width=30)
     search_entry.pack(side="left", padx=(0, 10))
@@ -59,8 +77,9 @@ def load_manage_workout_zones(content):
         command=lambda: load_zones_table()
     ).pack(side="left")
 
-    # Enter key search
-    search_entry.bind("<Return>", lambda e: load_zones_table())
+    # 🔹 Live search & filter
+    search_entry.bind("<KeyRelease>", lambda e: load_zones_table())
+    floor_filter.bind("<<ComboboxSelected>>", lambda e: load_zones_table())
 
     # ================= FORM =================
     form_frame = tk.Frame(content, bg="#252540")
@@ -72,7 +91,7 @@ def load_manage_workout_zones(content):
             text=text,
             bg="#252540",
             fg="white"
-        ).grid(row=r, column=c, sticky="w", padx=10, pady=8)
+        ).grid(row=r, column=c, sticky="w", padx=10, pady=2)
 
     def form_entry(r, c):
         e = tk.Entry(form_frame, width=28)
@@ -196,21 +215,22 @@ def load_manage_workout_zones(content):
         cur = conn.cursor()
 
         query = """
-            SELECT zone_id, zone_name, zone_type,
-                   gym_id, announcements, floor_number
+            SELECT zone_id, zone_name, zone_type, gym_id, announcements, floor_number
             FROM workout_zones
         """
-
         conditions = []
         params = []
 
+        # 🔹 FILTER (Floor)
         if floor_filter.get() != "All":
             conditions.append("floor_number = %s")
             params.append(floor_filter.get())
 
-        if search_entry.get().strip():
+        # 🔹 SEARCH (Zone Name)
+        search_text = search_entry.get().strip()
+        if search_text:
             conditions.append("zone_name LIKE %s")
-            params.append(f"%{search_entry.get().strip()}%")
+            params.append(f"%{search_text}%")
 
         if conditions:
             query += " WHERE " + " AND ".join(conditions)
@@ -306,4 +326,5 @@ def load_manage_workout_zones(content):
     action_btn("Delete", "#F44336", delete_zone)
     action_btn("Clear", "#607D8B", clear_form)
 
+    # ================= LOAD INITIAL DATA =================
     load_zones_table()
