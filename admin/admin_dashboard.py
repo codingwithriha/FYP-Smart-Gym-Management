@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk, messagebox
 from admin.home import load_home
 from admin.manage_users import load_manage_users
 from admin.manage_members import load_manage_members
@@ -15,6 +16,7 @@ from admin.salaries import load_manage_salaries
 from admin.payments import load_manage_payments
 from admin.announcements import load_manage_announcements
 from admin.trainer_schedule import load_manage_schedules
+from admin.equipments import load_manage_equipment
 
 
 def open_admin_dashboard():
@@ -66,6 +68,11 @@ def open_admin_dashboard():
             command=cmd
         )
 
+    # -------- LOGOUT FUNCTION WITH CONFIRMATION --------
+    def logout():
+        if messagebox.askyesno("Confirm Logout", "Are you sure you want to logout?"):
+            win.destroy()
+
     # -------- MENU ITEMS --------
     main_btn("Home", lambda: load_home(content)).pack(fill="x")
     main_btn("Manage Members", lambda: load_manage_members(content)).pack(fill="x")
@@ -78,13 +85,13 @@ def open_admin_dashboard():
     main_btn("Attendance Tracking", lambda: load_manage_attendance(content)).pack(fill="x")
     main_btn("Manage Appointments", lambda: load_manage_appointments(content)).pack(fill="x")
     main_btn("Subscriptions", lambda: load_manage_subscriptions(content)).pack(fill="x")
-    main_btn("Equipments").pack(fill="x")
+    main_btn("Equipments", lambda: load_manage_equipment(content)).pack(fill="x")
     main_btn("Reports", lambda: load_manage_reports(content)).pack(fill="x")
     main_btn("Salaries", lambda: load_manage_salaries(content)).pack(fill="x")
     main_btn("Payments", lambda: load_manage_payments(content)).pack(fill="x")
     main_btn("Manage Announcements", lambda: load_manage_announcements(content)).pack(fill="x")
     main_btn("Trainer Schedules", lambda: load_manage_schedules(content)).pack(fill="x")
-    main_btn("Logout").pack(fill="x")
+    main_btn("Logout", logout).pack(fill="x")  # ✅ Logout with popup
 
     # Load Home by default
     load_home(content)
@@ -92,4 +99,5 @@ def open_admin_dashboard():
     win.mainloop()
 
 
+# Uncomment to run
 # open_admin_dashboard()
