@@ -11,6 +11,7 @@ from admin.manage_appointments import load_manage_appointments
 from admin.subscriptions import load_manage_subscriptions
 from admin.reports import load_manage_reports
 from admin.salaries import load_manage_salaries
+from admin.payments import load_manage_payments
 
 
 
@@ -134,8 +135,10 @@ def open_admin_dashboard():
     "Salaries",
     lambda: load_manage_salaries(content)
 ).pack(fill="x")
-    
-    main_btn("Payments").pack(fill="x")
+    main_btn(
+    "Payments",
+    lambda: load_manage_payments(content)
+).pack(fill="x")
     main_btn("Manage Announcements").pack(fill="x")
     main_btn("Trainer Schedules").pack(fill="x")
     main_btn("Logout").pack(fill="x")
