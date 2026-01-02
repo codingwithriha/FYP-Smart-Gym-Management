@@ -5,6 +5,8 @@ from admin.manage_trainers import load_manage_trainers
 from admin.manage_attendant import load_manage_attendants
 from admin.manage_managers import load_manage_managers
 from admin.manage_gym_branches import load_manage_gym_branches
+from admin.manage_workout_zones import load_manage_workout_zones
+
 
 
 
@@ -102,8 +104,11 @@ def open_admin_dashboard():
     "Manage Gym Branches",
     lambda: load_manage_gym_branches(content)
 ).pack(fill="x")
-    
-    main_btn("Manage Workout Zones").pack(fill="x")
+    main_btn(
+    "Manage Workout Zones",
+    lambda: load_manage_workout_zones(content)
+).pack(fill="x")
+   
     main_btn("Attendance Tracking").pack(fill="x")
     main_btn("Manage Appointments").pack(fill="x")
     main_btn("Subscriptions").pack(fill="x")
