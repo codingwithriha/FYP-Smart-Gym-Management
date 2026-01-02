@@ -16,7 +16,7 @@ def load_manage_members(content):
     # ============ TITLE ============
     tk.Label(
         content,
-        text="Managing Members",
+        text="Manage Members",
         bg="#1e1e2f",
         fg="white",
         font=("Arial", 20, "bold")
