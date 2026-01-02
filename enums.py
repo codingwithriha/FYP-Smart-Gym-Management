@@ -2,8 +2,10 @@ from enum import Enum
 
 class Role(Enum):
     ADMIN = "ADMIN"
-    BRANCH_MANAGER = "BRANCH_MANAGER"
+    MANAGER = "MANAGER"
     MEMBER = "MEMBER"
+    TRAINER = "TRAINER"
+    ATTENDANT = "ATTENDANT"
 
 class MembershipType(Enum):
     REGULAR = "REGULAR"
