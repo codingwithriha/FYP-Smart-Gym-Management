@@ -7,13 +7,11 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from database_db import get_connection
 
-
 def load_manage_gym_branches(content):
 
     # ================= CLEAR PAGE =================
     for widget in content.winfo_children():
         widget.destroy()
-
     content.configure(bg="#1e1e2f")
 
     # ================= TITLE =================
@@ -29,6 +27,15 @@ def load_manage_gym_branches(content):
     filter_frame = tk.Frame(content, bg="#1e1e2f")
     filter_frame.pack(fill="x", padx=30, pady=10)
 
+    # 🔹 Filter Label + Combobox
+    tk.Label(
+        filter_frame,
+        text="Filter by City:",
+        bg="#1e1e2f",
+        fg="white",
+        font=("Arial", 12, "bold")
+    ).pack(side="left", padx=(0, 5))
+
     city_filter = ttk.Combobox(
         filter_frame,
         values=["All", "Islamabad", "Lahore", "Karachi"],
@@ -36,7 +43,16 @@ def load_manage_gym_branches(content):
         width=20
     )
     city_filter.set("All")
-    city_filter.pack(side="left", padx=(0, 10))
+    city_filter.pack(side="left", padx=(0, 15))
+
+    # 🔹 Search Label + Entry
+    tk.Label(
+        filter_frame,
+        text="Search by Branch Name:",
+        bg="#1e1e2f",
+        fg="white",
+        font=("Arial", 12, "bold")
+    ).pack(side="left", padx=(0, 5))
 
     search_entry = tk.Entry(filter_frame, width=30)
     search_entry.pack(side="left", padx=(0, 10))
@@ -51,6 +67,10 @@ def load_manage_gym_branches(content):
         pady=6,
         command=lambda: load_branches_table()
     ).pack(side="left")
+
+    # 🔹 Live search & filter
+    search_entry.bind("<KeyRelease>", lambda e: load_branches_table())
+    city_filter.bind("<<ComboboxSelected>>", lambda e: load_branches_table())
 
     # ================= FORM =================
     form_frame = tk.Frame(content, bg="#252540")
@@ -182,15 +202,24 @@ def load_manage_gym_branches(content):
         query = """SELECT branch_id, branch_name, area, city,
                           status, contact_number, manager_id
                    FROM branches"""
+        conditions = []
         params = []
 
+        # 🔹 FILTER (City)
         if city_filter.get() != "All":
-            query += " WHERE city=%s"
+            conditions.append("city=%s")
             params.append(city_filter.get())
 
-        if search_entry.get():
-            query += " AND branch_name LIKE %s" if "WHERE" in query else " WHERE branch_name LIKE %s"
-            params.append(f"%{search_entry.get()}%")
+        # 🔹 SEARCH (Branch Name)
+        search_text = search_entry.get().strip()
+        if search_text:
+            conditions.append("branch_name LIKE %s")
+            params.append(f"%{search_text}%")
+
+        if conditions:
+            query += " WHERE " + " AND ".join(conditions)
+
+        query += " ORDER BY branch_id DESC"
 
         cur.execute(query, params)
         rows = cur.fetchall()
@@ -285,4 +314,5 @@ def load_manage_gym_branches(content):
     action_btn("Delete", "#F44336", delete_branch)
     action_btn("Clear", "#607D8B", clear_form)
 
+    # 🔹 Load initial data
     load_branches_table()

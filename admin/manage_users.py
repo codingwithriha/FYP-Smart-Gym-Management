@@ -29,6 +29,7 @@ def load_manage_users(content):
     filter_frame = tk.Frame(content, bg="#1e1e2f")
     filter_frame.pack(fill="x", padx=30, pady=10)
 
+    tk.Label(filter_frame, text="Filter by Role:", bg="#1e1e2f", fg="white", font=("Arial", 12, "bold")).pack(side="left", padx=5)
     role_filter = ttk.Combobox(
         filter_frame,
         values=["All", "Admin", "Manager", "Trainer", "Member"],
@@ -36,10 +37,11 @@ def load_manage_users(content):
         width=18
     )
     role_filter.set("All")
-    role_filter.pack(side="left", padx=(0, 10))
+    role_filter.pack(side="left", padx=5)
 
+    tk.Label(filter_frame, text="Search by User ID:", bg="#1e1e2f", fg="white", font=("Arial", 12, "bold")).pack(side="left", padx=5)
     search_entry = tk.Entry(filter_frame, width=30)
-    search_entry.pack(side="left", padx=(0, 10))
+    search_entry.pack(side="left", padx=10)
 
     tk.Button(
         filter_frame,
@@ -57,12 +59,8 @@ def load_manage_users(content):
     form_frame.pack(fill="x", padx=30, pady=20)
 
     def form_label(text, r, c):
-        tk.Label(
-            form_frame,
-            text=text,
-            bg="#252540",
-            fg="white"
-        ).grid(row=r, column=c, sticky="w", padx=10, pady=8)
+        tk.Label(form_frame, text=text, bg="#252540", fg="white")\
+            .grid(row=r, column=c, sticky="w", padx=10, pady=8)
 
     def form_entry(r, c):
         e = tk.Entry(form_frame, width=28)
@@ -99,16 +97,9 @@ def load_manage_users(content):
     btn_frame.pack(anchor="w", padx=30, pady=15)
 
     def action_btn(text, color, cmd):
-        tk.Button(
-            btn_frame,
-            text=text,
-            bg=color,
-            fg="white",
-            bd=0,
-            padx=18,
-            pady=8,
-            command=cmd
-        ).pack(side="left", padx=5)
+        tk.Button(btn_frame, text=text, bg=color, fg="white",
+                  bd=0, padx=18, pady=8, command=cmd)\
+            .pack(side="left", padx=5)
 
     # ================= TABLE =================
     table_frame = tk.Frame(content, bg="#2f2f4f")
@@ -136,22 +127,30 @@ def load_manage_users(content):
         role.set("Member")
 
     def load_users_table():
-        for row in tree.get_children():
-            tree.delete(row)
+        tree.delete(*tree.get_children())
 
         conn = get_connection()
         cur = conn.cursor()
 
         query = "SELECT id, username, email, contact, role FROM users"
+        conditions = []
         params = []
 
+        # 🔹 FILTER by Role
         if role_filter.get() != "All":
-            query += " WHERE role=%s"
+            conditions.append("role=%s")
             params.append(role_filter.get())
 
-        if search_entry.get():
-            query += " AND username LIKE %s" if "WHERE" in query else " WHERE name LIKE %s"
-            params.append(f"%{search_entry.get()}%")
+        # 🔹 SEARCH by User ID
+        search_text = search_entry.get().strip()
+        if search_text:
+            conditions.append("id LIKE %s")
+            params.append(f"%{search_text}%")
+
+        if conditions:
+            query += " WHERE " + " AND ".join(conditions)
+
+        query += " ORDER BY id DESC"
 
         cur.execute(query, params)
         rows = cur.fetchall()
@@ -223,4 +222,9 @@ def load_manage_users(content):
     action_btn("Delete", "#F44336", delete_user)
     action_btn("Clear", "#607D8B", clear_form)
 
+    # 🔹 LIVE FILTER & SEARCH
+    role_filter.bind("<<ComboboxSelected>>", lambda e: load_users_table())
+    search_entry.bind("<KeyRelease>", lambda e: load_users_table())
+
+    # 🔹 Initial load
     load_users_table()

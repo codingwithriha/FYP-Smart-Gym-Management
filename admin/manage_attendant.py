@@ -7,12 +7,10 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from database_db import get_connection
 
-
 def load_manage_attendants(content):
     # ================= CLEAR PAGE =================
     for widget in content.winfo_children():
         widget.destroy()
-
     content.configure(bg="#1e1e2f")
 
     # ================= TITLE =================
@@ -28,6 +26,15 @@ def load_manage_attendants(content):
     filter_frame = tk.Frame(content, bg="#1e1e2f")
     filter_frame.pack(fill="x", padx=30, pady=10)
 
+    # 🔹 Filter Label + Combobox
+    tk.Label(
+        filter_frame,
+        text="Filter by Status:",
+        bg="#1e1e2f",
+        fg="white",
+        font=("Arial", 12, "bold")
+    ).pack(side="left", padx=(0, 5))
+
     status_filter = ttk.Combobox(
         filter_frame,
         values=["All", "Active", "Inactive"],
@@ -35,7 +42,16 @@ def load_manage_attendants(content):
         width=18
     )
     status_filter.set("All")
-    status_filter.pack(side="left", padx=(0, 10))
+    status_filter.pack(side="left", padx=(0, 15))
+
+    # 🔹 Search Label + Entry
+    tk.Label(
+        filter_frame,
+        text="Search by Attendant ID:",
+        bg="#1e1e2f",
+        fg="white",
+        font=("Arial", 12, "bold")
+    ).pack(side="left", padx=(0, 5))
 
     search_entry = tk.Entry(filter_frame, width=30)
     search_entry.pack(side="left", padx=(0, 10))
@@ -50,6 +66,10 @@ def load_manage_attendants(content):
         pady=6,
         command=lambda: load_attendants_table()
     ).pack(side="left")
+
+    # 🔹 Live search & filter
+    search_entry.bind("<KeyRelease>", lambda e: load_attendants_table())
+    status_filter.bind("<<ComboboxSelected>>", lambda e: load_attendants_table())
 
     # ================= FORM =================
     form_frame = tk.Frame(content, bg="#252540")
@@ -68,7 +88,7 @@ def load_manage_attendants(content):
         e.grid(row=r, column=c, padx=10, pady=8)
         return e
 
-    # =============== FORM FIELDS =================
+    # ================= FORM FIELDS =================
     form_label("Attendant ID", 0, 0)
     attendant_id = form_entry(0, 1)
 
@@ -159,15 +179,24 @@ def load_manage_attendants(content):
         query = """SELECT attendant_id, shift_time, gym_id, zone_id, qualification,
                           emergency_contact, status
                    FROM attendants"""
+        conditions = []
         params = []
 
+        # 🔹 FILTER (Status)
         if status_filter.get() != "All":
-            query += " WHERE status=%s"
+            conditions.append("status=%s")
             params.append(status_filter.get())
 
-        if search_entry.get():
-            query += " AND qualification LIKE %s" if "WHERE" in query else " WHERE qualification LIKE %s"
-            params.append(f"%{search_entry.get()}%")
+        # 🔹 SEARCH (Attendant ID)
+        search_text = search_entry.get().strip()
+        if search_text:
+            conditions.append("attendant_id LIKE %s")
+            params.append(f"%{search_text}%")
+
+        if conditions:
+            query += " WHERE " + " AND ".join(conditions)
+
+        query += " ORDER BY attendant_id DESC"
 
         cur.execute(query, params)
         rows = cur.fetchall()
@@ -262,4 +291,5 @@ def load_manage_attendants(content):
     action_btn("Delete", "#F44336", delete_attendant)
     action_btn("Clear", "#607D8B", clear_form)
 
+    # ================= LOAD INITIAL DATA =================
     load_attendants_table()

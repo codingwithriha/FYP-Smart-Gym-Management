@@ -7,13 +7,11 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from database_db import get_connection
 
-
 def load_manage_managers(content):
 
     # ================= CLEAR PAGE =================
     for widget in content.winfo_children():
         widget.destroy()
-
     content.configure(bg="#1e1e2f")
 
     # ================= TITLE =================
@@ -28,6 +26,15 @@ def load_manage_managers(content):
     # ================= FILTER BAR =================
     filter_frame = tk.Frame(content, bg="#1e1e2f")
     filter_frame.pack(fill="x", padx=30, pady=10)
+
+    # 🔹 Filter Label + Combobox
+    tk.Label(
+        filter_frame,
+        text="Filter by Department:",
+        bg="#1e1e2f",
+        fg="white",
+        font=("Arial", 12, "bold")
+    ).pack(side="left", padx=(0, 5))
 
     department_filter = ttk.Combobox(
         filter_frame,
@@ -47,7 +54,16 @@ def load_manage_managers(content):
         width=28
     )
     department_filter.set("All")
-    department_filter.pack(side="left", padx=(0, 10))
+    department_filter.pack(side="left", padx=(0, 15))
+
+    # 🔹 Search Label + Entry
+    tk.Label(
+        filter_frame,
+        text="Search by Manager ID:",
+        bg="#1e1e2f",
+        fg="white",
+        font=("Arial", 12, "bold")
+    ).pack(side="left", padx=(0, 5))
 
     search_entry = tk.Entry(filter_frame, width=30)
     search_entry.pack(side="left", padx=(0, 10))
@@ -62,6 +78,10 @@ def load_manage_managers(content):
         pady=6,
         command=lambda: load_managers_table()
     ).pack(side="left")
+
+    # 🔹 Live search & filter
+    search_entry.bind("<KeyRelease>", lambda e: load_managers_table())
+    department_filter.bind("<<ComboboxSelected>>", lambda e: load_managers_table())
 
     # ================= FORM =================
     form_frame = tk.Frame(content, bg="#252540")
@@ -178,15 +198,24 @@ def load_manage_managers(content):
         query = """SELECT manager_id, qualification, department,
                           hire_date, emergency_contact, gym_id
                    FROM managers"""
+        conditions = []
         params = []
 
+        # 🔹 FILTER (Department)
         if department_filter.get() != "All":
-            query += " WHERE department=%s"
+            conditions.append("department=%s")
             params.append(department_filter.get())
 
-        if search_entry.get():
-            query += " AND qualification LIKE %s" if "WHERE" in query else " WHERE qualification LIKE %s"
-            params.append(f"%{search_entry.get()}%")
+        # 🔹 SEARCH (Manager ID)
+        search_text = search_entry.get().strip()
+        if search_text:
+            conditions.append("manager_id LIKE %s")
+            params.append(f"%{search_text}%")
+
+        if conditions:
+            query += " WHERE " + " AND ".join(conditions)
+
+        query += " ORDER BY manager_id DESC"
 
         cur.execute(query, params)
         rows = cur.fetchall()
@@ -277,4 +306,5 @@ def load_manage_managers(content):
     action_btn("Delete", "#F44336", delete_manager)
     action_btn("Clear", "#607D8B", clear_form)
 
+    # 🔹 Load initial data
     load_managers_table()

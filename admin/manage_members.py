@@ -11,7 +11,6 @@ def load_manage_members(content):
     # ============ CLEAR PAGE ============
     for widget in content.winfo_children():
         widget.destroy()
-
     content.configure(bg="#1e1e2f")
 
     # ============ TITLE ============
@@ -27,6 +26,8 @@ def load_manage_members(content):
     filter_frame = tk.Frame(content, bg="#1e1e2f")
     filter_frame.pack(fill="x", padx=30, pady=10)
 
+    tk.Label(filter_frame, text="Filter by Status:", bg="#1e1e2f", fg="white", font=("Arial", 12, "bold")).pack(side="left", padx=5)
+
     status_filter = ttk.Combobox(
         filter_frame,
         values=["All", "Active", "Inactive"],
@@ -35,6 +36,8 @@ def load_manage_members(content):
     )
     status_filter.set("All")
     status_filter.pack(side="left", padx=5)
+
+    tk.Label(filter_frame, text="Search by Member ID:", bg="#1e1e2f", fg="white", font=("Arial", 12, "bold")).pack(side="left", padx=5)
 
     search_entry = tk.Entry(filter_frame, width=30)
     search_entry.pack(side="left", padx=10)
@@ -149,15 +152,24 @@ def load_manage_members(content):
                    status, emergency_contact,
                    gym_id, zone_id, trainer_id
                    FROM members"""
+        conditions = []
         params = []
 
+        # 🔹 FILTER
         if status_filter.get() != "All":
-            query += " WHERE status=%s"
+            conditions.append("status=%s")
             params.append(status_filter.get())
 
-        if search_entry.get():
-            query += " AND member_id LIKE %s" if "WHERE" in query else " WHERE member_id LIKE %s"
-            params.append(f"%{search_entry.get()}%")
+        # 🔹 SEARCH
+        search_text = search_entry.get().strip()
+        if search_text:
+            conditions.append("member_id LIKE %s")
+            params.append(f"%{search_text}%")
+
+        if conditions:
+            query += " WHERE " + " AND ".join(conditions)
+
+        query += " ORDER BY member_id DESC"
 
         cur.execute(query, params)
         for row in cur.fetchall():
@@ -240,9 +252,15 @@ def load_manage_members(content):
 
     tree.bind("<<TreeviewSelect>>", on_select)
 
+    # ============ BUTTONS ============
     btn("Add", "#7E57C2", add_member)
     btn("Update", "#FFA726", update_member)
     btn("Delete", "#EF5350", delete_member)
     btn("Refresh", "#607D8B", load_members_table)
 
+    # 🔹 LIVE FILTER & SEARCH
+    status_filter.bind("<<ComboboxSelected>>", lambda e: load_members_table())
+    search_entry.bind("<KeyRelease>", lambda e: load_members_table())
+
+    # 🔹 Load initial data
     load_members_table()
