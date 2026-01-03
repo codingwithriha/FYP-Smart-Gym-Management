@@ -4,10 +4,10 @@ from database_db import get_connection
 
 # ----------------- Login Function ----------------- #
 def login():
-    username = entry_username.get()
+    username_input = entry_username.get()
     password = entry_password.get()
 
-    if username.strip() == "" or password.strip() == "":
+    if username_input.strip() == "" or password.strip() == "":
         messagebox.showerror("Error", "All fields are required")
         return
 
@@ -15,18 +15,20 @@ def login():
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
+        # ✅ Fetch id, username, and role
         query = """
-        SELECT role FROM users
-        WHERE username=%s AND password=%s
+            SELECT id, username, role FROM users
+            WHERE username=%s AND password=%s
         """
-        cursor.execute(query, (username, password))
+        cursor.execute(query, (username_input, password))
         user = cursor.fetchone()
 
         conn.close()
 
         if user:
+            user_id = user['id']
+            username = user['username']  # <-- get actual username
             role = user['role']
-            messagebox.showinfo("Success", f"Login successful as {role}")
 
             root.destroy()  # Close login window
 
@@ -41,7 +43,8 @@ def login():
 
             elif role == "Member":
                 import member.member_dashboard as member_dashboard
-                member_dashboard.open_member_dashboard()
+                # ✅ Pass both user_id and username
+                member_dashboard.open_member_dashboard(member_id=user_id, username=username)
 
             elif role == "Trainer":
                 import trainer.trainer_dashboard as trainer_dashboard

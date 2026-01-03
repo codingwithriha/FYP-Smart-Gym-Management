@@ -97,7 +97,3 @@ def open_admin_dashboard():
     load_home(content)
 
     win.mainloop()
-
-
-# Uncomment to run
-# open_admin_dashboard()
