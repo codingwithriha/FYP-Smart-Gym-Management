@@ -39,7 +39,7 @@ def load_manager_home(parent):
     cards_frame.pack(fill="x", pady=15)
 
     def stat_card(title, value, color):
-        card = tk.Frame(cards_frame, bg=color, width=150, height=90)  # reduced width
+        card = tk.Frame(cards_frame, bg=color, width=150, height=90) 
         card.pack(side="left", padx=8)
         card.pack_propagate(False)
 

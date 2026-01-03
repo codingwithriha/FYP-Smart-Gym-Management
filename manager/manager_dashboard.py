@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import messagebox
 from manager.home import load_manager_home
+from manager.members import load_manage_members
 
 
 # ================= MANAGER DASHBOARD =================
@@ -72,7 +73,7 @@ def open_manager_dashboard(manager_name="Manager"):
 
     # ================= MENU =================
     menu_btn("Dashboard", lambda: load_manager_home(content)).pack(fill="x")
-    menu_btn("Members").pack(fill="x")
+    menu_btn("Members", lambda: load_manage_members(content)).pack(fill="x")
     menu_btn("Trainers").pack(fill="x")
     menu_btn("Gym Attendants").pack(fill="x")
     menu_btn("Attendance Tracking").pack(fill="x")
@@ -90,7 +91,7 @@ def open_manager_dashboard(manager_name="Manager"):
     menu_btn("Logout", logout).pack(fill="x", pady=(6, 0))
     # ================= DEFAULT PAGE =================
     load_manager_home(content)
-    
+
     win.mainloop()
     # DEFAULT PAGE (Auto-load Dashboard)
 
