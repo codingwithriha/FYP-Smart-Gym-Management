@@ -8,6 +8,10 @@ from member.attendance import load_attendance_page
 from member.announcements import load_announcements_page
 from member.payments import load_payments_page
 from member.workout_zones import load_workout_zones_page
+from member.profile import load_profile_page
+from member.reset_password import load_reset_password_page
+from member.messages import load_messages_page
+from member.trainer import load_trainer_page
 
 
 # ================= GET MEMBER INFO =================
@@ -112,11 +116,11 @@ def open_member_dashboard(member_id, username):
     menu_btn("Attendance", lambda: load_attendance_page(content, member_id)).pack(fill="x")
     menu_btn("Announcements", lambda: load_announcements_page(content)).pack(fill="x")
     menu_btn("Payments", lambda: load_payments_page(content, member_id)).pack(fill="x")
-    menu_btn("Trainer").pack(fill="x")
+    menu_btn("Trainer", lambda: load_trainer_page(content, member_id)).pack(fill="x")
     menu_btn("Workout Zones", lambda: load_workout_zones_page(content)).pack(fill="x")
-    menu_btn("Messages").pack(fill="x")
-    menu_btn("Profile").pack(fill="x")
-    menu_btn("Reset Password").pack(fill="x")
+    menu_btn("Messages", lambda: load_messages_page(content, member_id)).pack(fill="x")
+    menu_btn("Profile", lambda: load_profile_page(content, member_id)).pack(fill="x")
+    menu_btn("Reset Password", lambda: load_reset_password_page(content, member_id)).pack(fill="x")
     menu_btn("Logout", logout).pack(fill="x", pady=(6, 0))
 
     # ================= DEFAULT PAGE =================
