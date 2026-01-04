@@ -7,6 +7,10 @@ from manager.attendants import load_manage_attendants
 from manager.attendance import load_manage_attendance
 from manager.appointments import load_manage_appointments
 from manager.subscriptions import load_manage_subscriptions
+from manager.equipments import load_manage_equipments
+from manager.reports import load_manage_reports
+from manager.payments import load_manage_payments
+from manager.announcements import load_manage_announcements
 
 
 # ================= MANAGER DASHBOARD =================
@@ -84,10 +88,10 @@ def open_manager_dashboard(manager_name="Manager"):
     menu_btn("Attendance Tracking", lambda: load_manage_attendance(content)).pack(fill="x")
     menu_btn("Appointments", lambda: load_manage_appointments(content)).pack(fill="x")
     menu_btn("Subscriptions", lambda: load_manage_subscriptions(content)).pack(fill="x")
-    menu_btn("Equipments").pack(fill="x")
-    menu_btn("Reports").pack(fill="x")
-    menu_btn("Payments").pack(fill="x")
-    menu_btn("Announcements").pack(fill="x")
+    menu_btn("Equipments", lambda: load_manage_equipments(content)).pack(fill="x")
+    menu_btn("Reports", lambda: load_manage_reports(content)).pack(fill="x")
+    menu_btn("Payments", lambda: load_manage_payments(content)).pack(fill="x")
+    menu_btn("Announcements", lambda: load_manage_announcements(content)).pack(fill="x")
     menu_btn("Trainer Schedules").pack(fill="x")
     menu_btn("View Messages").pack(fill="x")
     menu_btn("Workout Zones").pack(fill="x")
