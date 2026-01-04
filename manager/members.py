@@ -273,10 +273,10 @@ def load_manage_members(parent):
                                                   padx=12, pady=6, command=cmd)
 
     styled_btn("Add Member", PRIMARY, lambda: open_form()).pack(side="left", padx=5)
-    styled_btn("Update Member", "#7c5dfa", lambda: open_form(True)).pack(side="left", padx=5)
-    styled_btn("Delete Selected", "#7c5dfa", lambda: delete_member()).pack(side="left", padx=5)
-    styled_btn("Excel Report", "#7c5dfa", lambda: export_excel()).pack(side="left", padx=5)
+    styled_btn("Update Member", "#0984e3", lambda: open_form(True)).pack(side="left", padx=5)
+    styled_btn("Delete Selected", "#d63031", lambda: delete_member()).pack(side="left", padx=5)
+    styled_btn("Excel Report", "#00b894", lambda: export_excel()).pack(side="left", padx=5)
     styled_btn("PDF Report", "#7c5dfa", lambda: export_pdf()).pack(side="left", padx=5)
-    styled_btn("Refresh", "#7c5dfa", lambda: fetch_members()).pack(side="left", padx=5)
+    styled_btn("Refresh", "#636e72", lambda: fetch_members()).pack(side="left", padx=5)
 
     fetch_members()

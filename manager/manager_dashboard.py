@@ -2,6 +2,11 @@ import tkinter as tk
 from tkinter import messagebox
 from manager.home import load_manager_home
 from manager.members import load_manage_members
+from manager.trainers import load_manage_trainers
+from manager.attendants import load_manage_attendants
+from manager.attendance import load_manage_attendance
+from manager.appointments import load_manage_appointments
+from manager.subscriptions import load_manage_subscriptions
 
 
 # ================= MANAGER DASHBOARD =================
@@ -74,11 +79,11 @@ def open_manager_dashboard(manager_name="Manager"):
     # ================= MENU =================
     menu_btn("Dashboard", lambda: load_manager_home(content)).pack(fill="x")
     menu_btn("Members", lambda: load_manage_members(content)).pack(fill="x")
-    menu_btn("Trainers").pack(fill="x")
-    menu_btn("Gym Attendants").pack(fill="x")
-    menu_btn("Attendance Tracking").pack(fill="x")
-    menu_btn("Appointments").pack(fill="x")
-    menu_btn("Subscriptions").pack(fill="x")
+    menu_btn("Trainers", lambda: load_manage_trainers(content)).pack(fill="x")
+    menu_btn("Gym Attendants", lambda: load_manage_attendants(content)).pack(fill="x")
+    menu_btn("Attendance Tracking", lambda: load_manage_attendance(content)).pack(fill="x")
+    menu_btn("Appointments", lambda: load_manage_appointments(content)).pack(fill="x")
+    menu_btn("Subscriptions", lambda: load_manage_subscriptions(content)).pack(fill="x")
     menu_btn("Equipments").pack(fill="x")
     menu_btn("Reports").pack(fill="x")
     menu_btn("Payments").pack(fill="x")
