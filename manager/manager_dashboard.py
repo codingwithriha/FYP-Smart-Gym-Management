@@ -11,6 +11,9 @@ from manager.equipments import load_manage_equipments
 from manager.reports import load_manage_reports
 from manager.payments import load_manage_payments
 from manager.announcements import load_manage_announcements
+from manager.trainer_schedules import load_manage_schedules
+from manager.view_messages import load_manage_messages
+from manager.workout_zones import load_manage_workout_zones
 
 
 # ================= MANAGER DASHBOARD =================
@@ -92,9 +95,9 @@ def open_manager_dashboard(manager_name="Manager"):
     menu_btn("Reports", lambda: load_manage_reports(content)).pack(fill="x")
     menu_btn("Payments", lambda: load_manage_payments(content)).pack(fill="x")
     menu_btn("Announcements", lambda: load_manage_announcements(content)).pack(fill="x")
-    menu_btn("Trainer Schedules").pack(fill="x")
-    menu_btn("View Messages").pack(fill="x")
-    menu_btn("Workout Zones").pack(fill="x")
+    menu_btn("Trainer Schedules", lambda: load_manage_schedules(content)).pack(fill="x")
+    menu_btn("View Messages", lambda: load_manage_messages(content)).pack(fill="x")
+    menu_btn("Workout Zones", lambda: load_manage_workout_zones(content)).pack(fill="x")
 
     # -------- LOGOUT --------
     menu_btn("Logout", logout).pack(fill="x", pady=(6, 0))
