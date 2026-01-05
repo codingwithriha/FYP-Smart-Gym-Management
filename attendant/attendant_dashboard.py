@@ -4,6 +4,8 @@ from datetime import datetime
 from database_db import get_connection
 from attendant.home import load_home
 from attendant.profile import load_attendant_profile
+from attendant.member_attendance import load_member_attendance
+from attendant.trainer_attendance import load_trainer_attendance
 
 
 # ================= COLORS =================
@@ -110,8 +112,8 @@ def open_attendant_dashboard(attendant_id):
     menu_items = [
     ("Dashboard", lambda: load_home(main_frame, attendant_id)),
     ("Profile", lambda: load_attendant_profile(main_frame, attendant_id)),
-    ("Member Attendance", None),
-    ("Trainer Attendance", None),
+    ("Member Attendance", lambda: load_member_attendance(main_frame)),
+    ("Trainer Attendance", lambda: load_trainer_attendance(main_frame)),
     ("Zone Members", None),
     ("Zone Trainers", None),
     ("Equipment", None),
