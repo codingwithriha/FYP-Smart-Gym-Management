@@ -3,6 +3,7 @@ from tkinter import messagebox
 from datetime import datetime
 from database_db import get_connection
 from attendant.home import load_home
+from attendant.profile import load_attendant_profile
 
 
 # ================= COLORS =================
@@ -108,7 +109,7 @@ def open_attendant_dashboard(attendant_id):
 
     menu_items = [
     ("Dashboard", lambda: load_home(main_frame, attendant_id)),
-    ("Profile", None),
+    ("Profile", lambda: load_attendant_profile(main_frame, attendant_id)),
     ("Member Attendance", None),
     ("Trainer Attendance", None),
     ("Zone Members", None),
