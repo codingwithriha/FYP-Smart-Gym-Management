@@ -6,6 +6,8 @@ from attendant.home import load_home
 from attendant.profile import load_attendant_profile
 from attendant.member_attendance import load_member_attendance
 from attendant.trainer_attendance import load_trainer_attendance
+from attendant.zone_members import load_zone_members
+from attendant.zone_trainers import load_zone_trainers
 
 
 # ================= COLORS =================
@@ -114,8 +116,8 @@ def open_attendant_dashboard(attendant_id):
     ("Profile", lambda: load_attendant_profile(main_frame, attendant_id)),
     ("Member Attendance", lambda: load_member_attendance(main_frame)),
     ("Trainer Attendance", lambda: load_trainer_attendance(main_frame)),
-    ("Zone Members", None),
-    ("Zone Trainers", None),
+    ("Zone Members", lambda: load_zone_members(main_frame, attendant_id)),
+    ("Zone Trainers", lambda: load_zone_trainers(main_frame, attendant_id)),
     ("Equipment", None),
     ("Notifications", None),
     ("Reports", None)
