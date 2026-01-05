@@ -27,32 +27,32 @@ def login():
 
         if user:
             user_id = user['id']
-            username = user['username']  # <-- get actual username
+            username = user['username']
             role = user['role']
 
             root.destroy()  # Close login window
 
             # ----------------- Redirect based on role ----------------- #
-            if role == "Admin":
+            if role.lower() == "admin":
                 import admin.admin_dashboard as admin_dashboard
-                admin_dashboard.open_admin_dashboard()
+                admin_dashboard.open_admin_dashboard(user_id)
 
-            elif role == "Manager":
+            elif role.lower() == "manager":
                 import manager.manager_dashboard as manager_dashboard
-                manager_dashboard.open_manager_dashboard()
+                manager_dashboard.open_manager_dashboard(user_id)
 
-            elif role == "Member":
+            elif role.lower() == "member":
                 import member.member_dashboard as member_dashboard
                 # ✅ Pass both user_id and username
                 member_dashboard.open_member_dashboard(member_id=user_id, username=username)
 
-            elif role == "Trainer":
+            elif role.lower() == "trainer":
                 import trainer.trainer_dashboard as trainer_dashboard
-                trainer_dashboard.open_trainer_dashboard()
+                trainer_dashboard.open_trainer_dashboard(user_id)
 
-            elif role == "Attendant":
+            elif role.lower() == "attendant":
                 import attendant.attendant_dashboard as attendant_dashboard
-                attendant_dashboard.open_attendant_dashboard()
+                attendant_dashboard.open_attendant_dashboard(user_id)
 
             else:
                 messagebox.showerror("Error", "Unknown role!")
@@ -75,27 +75,33 @@ root.resizable(False, False)
 header_frame = tk.Frame(root, bg="#7c5dfa", height=60)
 header_frame.pack(fill="x")
 
-header_label = tk.Label(header_frame, text="Gym Management System", 
-                        bg="#7c5dfa", fg="white", font=("Arial", 16, "bold"))
+header_label = tk.Label(
+    header_frame, text="Gym Management System", 
+    bg="#7c5dfa", fg="white", font=("Segoe UI", 16, "bold")
+)
 header_label.pack(pady=15)
 
 # ----------------- Welcome Text ----------------- #
-welcome_label = tk.Label(root, text="Welcome Back!", bg="#252540", 
-                         fg="white", font=("Arial", 14))
+welcome_label = tk.Label(
+    root, text="Welcome Back!", 
+    bg="#252540", fg="white", font=("Segoe UI", 14)
+)
 welcome_label.pack(pady=(20,10))
 
 # ----------------- Username & Password Fields ----------------- #
-tk.Label(root, text="Username", bg="#252540", fg="white", font=("Arial", 12)).pack(pady=(10,5))
-entry_username = tk.Entry(root, font=("Arial", 12), width=30)
+tk.Label(root, text="Username", bg="#252540", fg="white", font=("Segoe UI", 12)).pack(pady=(10,5))
+entry_username = tk.Entry(root, font=("Segoe UI", 12), width=30)
 entry_username.pack()
 
-tk.Label(root, text="Password", bg="#252540", fg="white", font=("Arial", 12)).pack(pady=(10,5))
-entry_password = tk.Entry(root, show="*", font=("Arial", 12), width=30)
+tk.Label(root, text="Password", bg="#252540", fg="white", font=("Segoe UI", 12)).pack(pady=(10,5))
+entry_password = tk.Entry(root, show="*", font=("Segoe UI", 12), width=30)
 entry_password.pack()
 
 # ----------------- Login Button ----------------- #
-login_btn = tk.Button(root, text="Login", command=login, 
-                      bg="#7c5dfa", fg="white", font=("Arial", 12, "bold"), width=15)
+login_btn = tk.Button(
+    root, text="Login", command=login, 
+    bg="#7c5dfa", fg="white", font=("Segoe UI", 12, "bold"), width=15
+)
 login_btn.pack(pady=30)
 
 root.mainloop()
