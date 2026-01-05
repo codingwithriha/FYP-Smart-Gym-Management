@@ -35,7 +35,7 @@ def login():
             # ----------------- Redirect based on role ----------------- #
             if role.lower() == "admin":
                 import admin.admin_dashboard as admin_dashboard
-                admin_dashboard.open_admin_dashboard(user_id)
+                admin_dashboard.open_admin_dashboard()
 
             elif role.lower() == "manager":
                 import manager.manager_dashboard as manager_dashboard

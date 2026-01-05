@@ -8,6 +8,9 @@ from attendant.member_attendance import load_member_attendance
 from attendant.trainer_attendance import load_trainer_attendance
 from attendant.zone_members import load_zone_members
 from attendant.zone_trainers import load_zone_trainers
+from attendant.zone_equipments import load_zone_equipment
+from attendant.notifications import load_notifications
+from attendant.reports import load_reports
 
 
 # ================= COLORS =================
@@ -118,9 +121,9 @@ def open_attendant_dashboard(attendant_id):
     ("Trainer Attendance", lambda: load_trainer_attendance(main_frame)),
     ("Zone Members", lambda: load_zone_members(main_frame, attendant_id)),
     ("Zone Trainers", lambda: load_zone_trainers(main_frame, attendant_id)),
-    ("Equipment", None),
-    ("Notifications", None),
-    ("Reports", None)
+    ("Equipment", lambda: load_zone_equipment(main_frame, attendant_id)),
+    ("Notifications", lambda: load_notifications(main_frame)),
+    ("Reports", lambda: load_reports(main_frame, attendant_id)),  # Placeholder for reports function
 ]
     for text, cmd in menu_items:
         tk.Button(
