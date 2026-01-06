@@ -2,12 +2,13 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime
 from database_db import get_connection
-
-# ✅ IMPORT REAL HOME DASHBOARD
 from trainer.home import load_home
 from trainer.members import load_members 
 from trainer.attendance import load_attendance 
-from trainer.chat import load_chat # <-- THIS FIXES EVERYTHING
+from trainer.chat import load_chat
+from trainer.schedule import load_schedule
+from trainer.appointment import load_appointments
+from trainer.reports import load_reports 
 
 # ================= COLORS =================
 BG = "#1e1e2f"
@@ -167,22 +168,6 @@ def clear_frame(frame):
 
 # ================= Placeholder Pages (INTACT) =================
 
-
-
-def load_schedule(frame, trainer_id):
-    clear_frame(frame)
-    tk.Label(frame, text="⏰ Schedule / Activities", bg=BG, fg=TEXT,
-             font=("Segoe UI", 20, "bold")).pack(pady=40)
-
-def load_appointments(frame, trainer_id):
-    clear_frame(frame)
-    tk.Label(frame, text="📅 Appointments", bg=BG, fg=TEXT,
-             font=("Segoe UI", 20, "bold")).pack(pady=40)
-
-def load_reports(frame, trainer_id):
-    clear_frame(frame)
-    tk.Label(frame, text="📊 Performance Reports", bg=BG, fg=TEXT,
-             font=("Segoe UI", 20, "bold")).pack(pady=40)
 
 def load_reset_password(frame, trainer_id):
     clear_frame(frame)
