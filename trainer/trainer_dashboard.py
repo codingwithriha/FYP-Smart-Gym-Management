@@ -9,6 +9,7 @@ from trainer.chat import load_chat
 from trainer.schedule import load_schedule
 from trainer.appointment import load_appointments
 from trainer.reports import load_reports 
+from trainer.reset_password import load_reset_password
 
 # ================= COLORS =================
 BG = "#1e1e2f"
@@ -168,11 +169,6 @@ def clear_frame(frame):
 
 # ================= Placeholder Pages (INTACT) =================
 
-
-def load_reset_password(frame, trainer_id):
-    clear_frame(frame)
-    tk.Label(frame, text="🔒 Reset Password", bg=BG, fg=TEXT,
-             font=("Segoe UI", 20, "bold")).pack(pady=40)
 
 def load_profile(frame, trainer_id):
     clear_frame(frame)
