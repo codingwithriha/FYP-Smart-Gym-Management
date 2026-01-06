@@ -10,6 +10,8 @@ from trainer.schedule import load_schedule
 from trainer.appointment import load_appointments
 from trainer.reports import load_reports 
 from trainer.reset_password import load_reset_password
+from trainer.profile import load_profile
+
 
 # ================= COLORS =================
 BG = "#1e1e2f"
@@ -168,9 +170,3 @@ def clear_frame(frame):
         widget.destroy()
 
 # ================= Placeholder Pages (INTACT) =================
-
-
-def load_profile(frame, trainer_id):
-    clear_frame(frame)
-    tk.Label(frame, text="👤 Profile", bg=BG, fg=TEXT,
-             font=("Segoe UI", 20, "bold")).pack(pady=40)
