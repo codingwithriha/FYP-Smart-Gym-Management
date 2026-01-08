@@ -1,13 +1,12 @@
 import tkinter as tk
 from tkinter import messagebox
 from database_db import get_connection
+import register
 
-# ----------------- Login Function ----------------- #
-def login():
-    username_input = entry_username.get()
-    password = entry_password.get()
-
-    if username_input.strip() == "" or password.strip() == "":
+# ----------------- LOGIN FUNCTION -----------------
+def login(root, role, username_input, password_input):
+    role = role.lower()
+    if username_input.strip() == "" or (role != "admin" and password_input.strip() == ""):
         messagebox.showerror("Error", "All fields are required")
         return
 
@@ -15,93 +14,106 @@ def login():
         conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
-        # ✅ Fetch id, username, and role
-        query = """
-            SELECT id, username, role FROM users
-            WHERE username=%s AND password=%s
-        """
-        cursor.execute(query, (username_input, password))
-        user = cursor.fetchone()
+        # Determine table and ID column based on role
+        if role == "member":
+            table = "members"
+            id_col = "member_id"
+        elif role == "trainer":
+            table = "trainers"
+            id_col = "trainer_id"
+        elif role == "attendant":
+            table = "attendants"
+            id_col = "attendant_id"
+        elif role == "manager":
+            table = "managers"
+            id_col = "manager_id"
+        elif role == "admin":
+            table = "users"
+            id_col = "id"
+        else:
+            messagebox.showerror("Error", "Invalid role selected!")
+            return
 
+        # Build query
+        if role == "admin":
+            query = f"SELECT id, username, role FROM {table} WHERE username=%s AND password=%s"
+            cursor.execute(query, (username_input, password_input))
+        else:
+            query = f"SELECT * FROM {table} WHERE {id_col}=%s AND password=%s"
+            cursor.execute(query, (username_input, password_input))
+
+        user = cursor.fetchone()
         conn.close()
 
         if user:
-            user_id = user['id']
-            username = user['username']
-            role = user['role']
+            root.destroy()
+            user_id = user[id_col] if role != "admin" else user["id"]
 
-            root.destroy()  # Close login window
-
-            # ----------------- Redirect based on role ----------------- #
-            if role.lower() == "admin":
+            # Redirect to dashboards
+            if role == "admin":
                 import admin.admin_dashboard as admin_dashboard
                 admin_dashboard.open_admin_dashboard()
-
-            elif role.lower() == "manager":
+            elif role == "manager":
                 import manager.manager_dashboard as manager_dashboard
                 manager_dashboard.open_manager_dashboard(user_id)
-
-            elif role.lower() == "member":
+            elif role == "member":
                 import member.member_dashboard as member_dashboard
-                # ✅ Pass both user_id and username
-                member_dashboard.open_member_dashboard(member_id=user_id, username=username)
-
-            elif role.lower() == "trainer":
+                member_dashboard.open_member_dashboard(member_id=user_id)
+            elif role == "trainer":
                 import trainer.trainer_dashboard as trainer_dashboard
                 trainer_dashboard.open_trainer_dashboard(user_id)
-
-            elif role.lower() == "attendant":
+            elif role == "attendant":
                 import attendant.attendant_dashboard as attendant_dashboard
                 attendant_dashboard.open_attendant_dashboard(user_id)
-
-            else:
-                messagebox.showerror("Error", "Unknown role!")
-
         else:
-            messagebox.showerror("Error", "Invalid username or password")
+            messagebox.showerror("Error", "Invalid credentials for the selected role!")
 
     except Exception as e:
         messagebox.showerror("Error", str(e))
 
 
-# ----------------- GUI ----------------- #
-root = tk.Tk()
-root.title("Smart Gym Login")
-root.geometry("400x350")
-root.configure(bg="#252540")
-root.resizable(False, False)
+# ----------------- OPEN LOGIN PAGE -----------------
+def open_login_page():
+    root = tk.Tk()
+    root.title("Smart Gym Login")
+    root.geometry("400x450")
+    root.configure(bg="#252540")
+    root.resizable(False, False)
 
-# ----------------- Top Header ----------------- #
-header_frame = tk.Frame(root, bg="#7c5dfa", height=60)
-header_frame.pack(fill="x")
+    # Header
+    tk.Label(root, text="Smart Gym Management", bg="#7c5dfa", fg="white",
+             font=("Segoe UI", 16, "bold")).pack(fill="x", pady=15)
 
-header_label = tk.Label(
-    header_frame, text="Gym Management System", 
-    bg="#7c5dfa", fg="white", font=("Segoe UI", 16, "bold")
-)
-header_label.pack(pady=15)
+    # Role Dropdown
+    tk.Label(root, text="Select Role", bg="#252540", fg="white", font=("Segoe UI", 12)).pack(pady=(10,5))
+    role_var = tk.StringVar()
+    role_var.set("member")
+    roles = ["admin", "manager", "member", "trainer", "attendant"]
+    tk.OptionMenu(root, role_var, *roles).pack(pady=(0,15))
 
-# ----------------- Welcome Text ----------------- #
-welcome_label = tk.Label(
-    root, text="Welcome Back!", 
-    bg="#252540", fg="white", font=("Segoe UI", 14)
-)
-welcome_label.pack(pady=(20,10))
+    # Username / ID
+    tk.Label(root, text="Username / ID", bg="#252540", fg="white", font=("Segoe UI", 12)).pack(pady=(5,5))
+    entry_username = tk.Entry(root, font=("Segoe UI", 12), width=30)
+    entry_username.pack()
 
-# ----------------- Username & Password Fields ----------------- #
-tk.Label(root, text="Username", bg="#252540", fg="white", font=("Segoe UI", 12)).pack(pady=(10,5))
-entry_username = tk.Entry(root, font=("Segoe UI", 12), width=30)
-entry_username.pack()
+    # Password
+    tk.Label(root, text="Password", bg="#252540", fg="white", font=("Segoe UI", 12)).pack(pady=(10,5))
+    entry_password = tk.Entry(root, show="*", font=("Segoe UI", 12), width=30)
+    entry_password.pack()
 
-tk.Label(root, text="Password", bg="#252540", fg="white", font=("Segoe UI", 12)).pack(pady=(10,5))
-entry_password = tk.Entry(root, show="*", font=("Segoe UI", 12), width=30)
-entry_password.pack()
+    # Login Button
+    tk.Button(root, text="Login", bg="#7c5dfa", fg="white", font=("Segoe UI", 12, "bold"), width=15,
+              command=lambda: login(root, role_var.get(), entry_username.get(), entry_password.get())).pack(pady=20)
 
-# ----------------- Login Button ----------------- #
-login_btn = tk.Button(
-    root, text="Login", command=login, 
-    bg="#7c5dfa", fg="white", font=("Segoe UI", 12, "bold"), width=15
-)
-login_btn.pack(pady=30)
+    # Register link
+    tk.Label(root, text="New User?", bg="#252540", fg="white", font=("Segoe UI", 10)).pack()
+    tk.Button(root, text="Register Here", bg="#252540", fg="#7c5dfa", bd=0,
+              font=("Segoe UI", 10, "bold"),
+              command=lambda: [root.destroy(), register.open_register_page()]).pack()
 
-root.mainloop()
+    root.mainloop()
+
+
+# ----------------- ENTRY POINT -----------------
+if __name__ == "__main__":
+    open_login_page()
