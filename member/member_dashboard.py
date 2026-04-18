@@ -18,10 +18,12 @@ from member.trainer import load_trainer_page
 def get_member_info(member_id):
     conn = get_connection()
     cursor = conn.cursor()
+
     cursor.execute(
-        "SELECT username, email FROM users WHERE id = %s",
+        "SELECT name, email FROM members WHERE member_id = %s",
         (member_id,)
     )
+
     result = cursor.fetchone()
     conn.close()
 
@@ -31,7 +33,7 @@ def get_member_info(member_id):
 
 
 # ================= MEMBER DASHBOARD =================
-def open_member_dashboard(member_id, username):
+def open_member_dashboard(member_id):
     win = tk.Tk()
     win.title("Member Dashboard - Smart Gym")
     win.geometry("1300x750")
