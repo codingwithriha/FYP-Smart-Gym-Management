@@ -8,7 +8,7 @@ This project was developed as my **Final Year Project for BS Software Engineerin
 
 ## 📌 Project Overview
 
-Managing gym records manually can be time-consuming and prone to errors. This system provides a **digital solution** that allows gym administrators to manage all operations in one place.
+Managing gym records manually can be time consuming and prone to errors. This system provides a **digital solution** that allows gym administrators to manage all operations in one place.
 
 The application is designed for **M9's Fitness Gym** to streamline member management, appointment scheduling, and financial tracking.
 
