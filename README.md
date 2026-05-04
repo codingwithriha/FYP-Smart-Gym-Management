@@ -1,6 +1,6 @@
 # 🏋️ Smart Gym Management System
 
-The **Smart Gym Management System** is a desktop-based application developed to simplify and automate the daily operations of a gym. The system helps gym management efficiently handle members, trainers, payments, attendance, and reports.
+The **Smart Gym Management System** is a desktop based application developed to simplify and automate the daily operations of a gym. The system helps gym management efficiently handle members, trainers, payments, attendance, and reports.
 
 This project was developed as my **Final Year Project for BS Software Engineering**.
 
